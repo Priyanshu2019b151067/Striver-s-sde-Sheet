@@ -1,49 +1,57 @@
 // { Driver Code Starts
+// Program to find minimum number of platforms
+// required on a railway station
 #include <bits/stdc++.h>
 using namespace std;
 
+
  // } Driver Code Ends
-class Solution
-{
+class Solution{
     public:
-    static bool sortbysec(const pair<int,int> & a, const pair<int,int> &b){
-        return a.second < b.second;
-    }
+    //Function to find the minimum number of platforms required at the
+    //railway station such that no train waits.
     
-    int maxMeetings(int start[], int end[], int n)
+    int findPlatform(int arr[], int dep[], int n)
     {
-        vector<pair<int,int>> interval;
-        for(int i = 0; i < n;i++){
-            interval.push_back({start[i],end[i]}); 
-        }
-        sort(interval.begin(),interval.end(),sortbysec);
-        int count = 1;
-        int ending_time = interval[0].second;
-        for(int i = 1;i < interval.size();i++){
-            if(interval[i].first > ending_time){
-                count++;
-                ending_time = interval[i].second;
+        sort(arr,arr+n);
+        sort(dep,dep + n);
+        priority_queue<int,vector<int>,greater<int>> min_heap;
+        int maxi = 1;
+        min_heap.push(dep[0]);
+        for(int i = 1;i < n;i++){
+            if(arr[i] > min_heap.top()){
+                min_heap.pop();
+                min_heap.push(dep[i]);
+            }
+            else {
+                maxi++;
+                min_heap.push(dep[i]);
             }
         }
-        return count;
+        return maxi;
     }
 };
 
+
 // { Driver Code Starts.
-int main() {
+// Driver code
+int main()
+{
     int t;
-    cin >> t;
-    while (t--) {
+    cin>>t;
+    while(t--) 
+    {
         int n;
-        cin >> n;
-        int start[n], end[n];
-        for (int i = 0; i < n; i++) cin >> start[i];
-
-        for (int i = 0; i < n; i++) cin >> end[i];
-
+        cin>>n;
+        int arr[n];
+        int dep[n];
+        for(int i=0;i<n;i++)
+            cin>>arr[i];
+        for(int j=0;j<n;j++){
+            cin>>dep[j];
+        }
         Solution ob;
-        int ans = ob.maxMeetings(start, end, n);
-        cout << ans << endl;
-    }
-    return 0;
+        cout <<ob.findPlatform(arr, dep, n)<<endl;
+    } 
+   return 0;
 }  // } Driver Code Ends
